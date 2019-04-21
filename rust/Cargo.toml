@@ -23,10 +23,18 @@ term = "0.5"
 prettytable-rs = "0.7"
 uuid = "0.6.5"
 
-grin_wallet = { git = "https://github.com/cyclefortytwo/grin", rev = "4de4cd1584d95e7893305f96fc1d28d4cd2cc9d4" }
-grin_core = { git = "https://github.com/cyclefortytwo/grin", rev = "4de4cd1584d95e7893305f96fc1d28d4cd2cc9d4" }
-grin_util = { git = "https://github.com/cyclefortytwo/grin", rev = "4de4cd1584d95e7893305f96fc1d28d4cd2cc9d4" }
-grin_keychain = { git = "https://github.com/cyclefortytwo/grin", rev = "4de4cd1584d95e7893305f96fc1d28d4cd2cc9d4" }
+grin_apiwallet = { path = "../../../mimblewimble/grin-wallet/apiwallet", version = "1.1.0" }
+grin_libwallet = { path = "../../../mimblewimble/grin-wallet/libwallet", version = "1.1.0" }
+grin_refwallet = { path = "../../../mimblewimble/grin-wallet/refwallet", version = "1.1.0" }
+grin_wallet_config = { path = "../../../mimblewimble/grin-wallet/config", version = "1.1.0" }
+
+grin_core = { git = "https://github.com/mimblewimble/grin", branch = "milestone/1.1.0" }
+grin_keychain = { git = "https://github.com/mimblewimble/grin", branch = "milestone/1.1.0" }
+grin_chain = { git = "https://github.com/mimblewimble/grin", branch = "milestone/1.1.0" }
+grin_util = { git = "https://github.com/mimblewimble/grin", branch = "milestone/1.1.0" }
+grin_api = { git = "https://github.com/mimblewimble/grin", branch = "milestone/1.1.0" }
+grin_store = { git = "https://github.com/mimblewimble/grin", branch = "milestone/1.1.0" }
+
 
 
 [build-dependencies]
@@ -40,6 +48,3 @@ cbindgen = "0.8.3"
 [lib]
 name = "wallet"
 crate-type = ["staticlib"]
-
-[patch.crates-io]
-croaring = { path = "./croaring-rs" }
