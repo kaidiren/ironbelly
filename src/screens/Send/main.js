@@ -14,7 +14,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { Keyboard } from 'react-native'
 import { connect } from 'react-redux'
 import Amount from './amount'
@@ -42,7 +42,6 @@ type Props = {
     url: string,
     selectionStrategyIsUseAll: boolean
   ) => void,
-  resetTxForm: () => void,
   setOutputStrategies: (outputStrategies: Array<RustOutputStrategy>) => void,
   txForm: TxForm,
   settings: SettingsState,
@@ -56,9 +55,14 @@ type Props = {
 type State = {}
 
 class Send extends Component<Props, State> {
-  steps = [Amount, Strategy, Message, Transport, Address]
+  steps = []
   static navigationOptions = {
     header: null,
+  }
+
+  constructor(props) {
+    super(props)
+    this.steps = this.buildSteps()
   }
 
   componentDidUpdate(prevProps) {
@@ -70,31 +74,57 @@ class Send extends Component<Props, State> {
     }
   }
 
-  componentDidMount() {
-    this.props.resetTxForm()
+  componentDidMount() {}
+
+  buildSteps = () => {
+    const { txForm } = this.props
+    const { amount, outputStrategy, message, url } = txForm
+    const steps = []
+    if (!amount) {
+      steps.push(Amount)
+    }
+    if (!outputStrategy) {
+      steps.push(Strategy)
+    }
+    if (!message) {
+      steps.push(Message)
+    }
+    if (!url) {
+      steps.push(Transport, Address)
+    }
+    return steps
   }
 
   render() {
     const { navigation, txForm } = this.props
     const { amount, message, outputStrategy, url } = txForm
     return (
-      <ScreenWithManySteps
-        steps={this.steps}
-        navigation={navigation}
-        cancelAction={() => {
-          Keyboard.dismiss()
-          navigation.goBack(null)
-        }}
-        finalAction={() => {
-          if (outputStrategy) {
-            if (url) {
-              this.props.txSendHttps(amount, message, url, outputStrategy.selectionStrategyIsUseAll)
-            } else {
-              this.props.txCreate(amount, message, outputStrategy.selectionStrategyIsUseAll)
-            }
-          }
-        }}
-      />
+      <Fragment>
+        {this.steps.length > 0 && (
+          <ScreenWithManySteps
+            steps={this.steps}
+            navigation={navigation}
+            cancelAction={() => {
+              Keyboard.dismiss()
+              navigation.goBack(null)
+            }}
+            finalAction={() => {
+              if (outputStrategy) {
+                if (url) {
+                  this.props.txSendHttps(
+                    amount,
+                    message,
+                    url,
+                    outputStrategy.selectionStrategyIsUseAll
+                  )
+                } else {
+                  this.props.txCreate(amount, message, outputStrategy.selectionStrategyIsUseAll)
+                }
+              }
+            }}
+          />
+        )}
+      </Fragment>
     )
   }
 }
@@ -120,7 +150,6 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   ) => {
     dispatch({ type: 'TX_SEND_HTTPS_REQUEST', amount, message, url, selectionStrategyIsUseAll })
   },
-  resetTxForm: () => dispatch({ type: 'TX_FORM_RESET' }),
 })
 
 export default connect(
