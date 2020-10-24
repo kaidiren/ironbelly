@@ -79,3 +79,5 @@ android/key.json
 # Local tools
 slates/*
 
+Carthage/Build
+
