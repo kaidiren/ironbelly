@@ -80,3 +80,6 @@ slates/*
 # Licenses
 licenses.json
 
+# HTML page with all the snapshots
+screenshots/screenshots.html
+

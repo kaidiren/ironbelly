@@ -430,7 +430,7 @@ export const sideEffects = {
   },
   ['CLEAR_PASSWORD']: async (_action: clearPasswordAction) => {
     try {
-      await GrinBridge.closeWallet()
+      console.log(await GrinBridge.closeWallet())
     } catch (error) {
       log(error, true)
     }
